@@ -14,7 +14,7 @@ def search_movie(*args):
     if result.status_code == 200:
         return result.json()
     else:
-        print("Request gelmedi")
+        print("Bad request")
         exit()
 
 def search_book(*args):
@@ -25,26 +25,39 @@ def search_book(*args):
     result = requests.get(url)
     root = ET.fromstring(result.text)
 
-    for book in root.iter('work'):
-        print('\nBook ID: ' + book[0].text)
-        print('Book name: "' + book[8][1].text + '"')
-        print('Author: ' + book[8][2][1].text)
-        print('Rating: ' + book[7].text)
-        print("----------------------------------------")
+    book_arrey = [[book[0].text, book[8][1].text, book[8][2][1].text, book[7].text] for book in root.iter('work')]
+
+    if int(next(root.iter('total-results')).text) > 0:
+        return book_arrey
+    else:
+        print("Bad request")
+        exit()
 
 if len(sys.argv) < 3:
-    print("Alinmadi")
+    print("Wrong input")
     exit()
 else:
     if sys.argv[1] == 'movie':
         result = search_movie(*sys.argv[2:])
-        # if result['Response'] == 'False':
-        #     print(result['Error'])
-        #     exit()
-        # else:
-        print(result)
-            # print('Title: ', result['Title'])
-            # print('Year: ', result['Year'])
-            # print('Released: ', result['Released'])
+        if result['Response'] == 'False':
+            print(result['I cant find this movie. '])
+            exit()
+        else:
+            print("----------------------------------------")
+            print('Title: ', result['Title'])
+            print('Year: ', result['Year'])
+            print('Released: ', result['Released'])
+            print('Genre: ', result['Genre'])
+            print('Director: ', result['Director'])
+            print("----------------------------------------")
+
     elif sys.argv[1] == 'book':
         result = search_book(*sys.argv[2:])
+
+        print("----------------------------------------")
+        for i in range(3):
+            print('Book ID: ' + result[i][0])
+            print('Book name: "' + result[i][1] + '"')
+            print('Author: ' + result[i][2])
+            print('Rating: ' + result[i][3])
+            print("----------------------------------------")
