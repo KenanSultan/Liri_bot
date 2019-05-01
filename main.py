@@ -1,4 +1,4 @@
-import requests, sys, os
+import requests, sys, os, inquirer
 from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
 
@@ -25,9 +25,12 @@ def search_book(*args):
     result = requests.get(url)
     root = ET.fromstring(result.text)
 
-    for i in root.iter('best_book'):
-        print(i[2][1].text)
-    
+    for book in root.iter('work'):
+        print('\nBook ID: ' + book[0].text)
+        print('Book name: "' + book[8][1].text + '"')
+        print('Author: ' + book[8][2][1].text)
+        print('Rating: ' + book[7].text)
+        print("----------------------------------------")
 
 if len(sys.argv) < 3:
     print("Alinmadi")
