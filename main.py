@@ -6,7 +6,7 @@ load_dotenv()
 
 def search_movie(*args):
     movie_name = " ".join(args)
-    apikey = os.getenv('apikey')
+    apikey = os.getenv('apikey_omdb')
     url = f"http://omdbapi.com/?apikey={apikey}&t={movie_name}"
 
     result = requests.get(url)
@@ -18,16 +18,17 @@ def search_movie(*args):
         exit()
 
 def search_book(*args):
+    global result_len
     book_name = " ".join(args)
-    apikey = '5OVwGm0ylIwc1aSv8PamQ'
+    apikey = os.getenv('apikey_book')
     url = f"https://www.goodreads.com/search/index.xml?key={apikey}&q={book_name}"
 
     result = requests.get(url)
     root = ET.fromstring(result.text)
+    result_len = int(next(root.iter('total-results')).text)
 
-    book_arrey = [[book[0].text, book[8][1].text, book[8][2][1].text, book[7].text] for book in root.iter('work')]
-
-    if int(next(root.iter('total-results')).text) > 0:
+    if result_len > 3:
+        book_arrey = [[book[0].text, book[8][1].text, book[8][2][1].text, book[7].text] for book in root.iter('work')]
         return book_arrey
     else:
         print("Bad request")
