@@ -2,14 +2,14 @@
 
 ## Used modules
 
-import requests, sys, os, inquirer
-from dotenv import load_dotenv
-import xml.etree.ElementTree as ET
+* import requests, sys, os, inquirer
+* from dotenv import load_dotenv
+* import xml.etree.ElementTree as ET
 
 ## Used APIs
 
-http://omdbapi.com/?
-https://www.goodreads.com/search/index.xml?
+* http://omdbapi.com/?
+* https://www.goodreads.com/search/index.xml?
 
 ## About
 
